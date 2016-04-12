@@ -7,9 +7,9 @@ import ks.common.model.Move;
 import ks.common.model.Pile;
 
 /**
- * Created by frankegan on 4/1/16.
+ * Created by frankegan on 4/11/16.
  */
-public class WasteToSeasonMove extends Move {
+public class ToSeasonMove extends Move {
     /**
      * The waste pile.
      */
@@ -23,12 +23,12 @@ public class WasteToSeasonMove extends Move {
     /**
      * The card being dragged (if the move has already been made).
      */
-    protected Card theCard;
+    protected Card cardBeingDragged;
 
-    public WasteToSeasonMove(Pile from, Card theCard, Pile to) {
+    public ToSeasonMove(Pile from, Card cardBeingDragged, Pile to) {
         this.from = from;
         this.to = to;
-        this.theCard = theCard;
+        this.cardBeingDragged = cardBeingDragged;
     }
 
     @Override
@@ -39,10 +39,10 @@ public class WasteToSeasonMove extends Move {
 
         // EXECUTE:
         // move card from waste to to Pile.
-        if (theCard == null)
+        if (cardBeingDragged == null)
             to.add(from.get());
         else
-            to.add(theCard);
+            to.add(cardBeingDragged);
 
         // advance score
         game.updateScore(1);
@@ -65,23 +65,20 @@ public class WasteToSeasonMove extends Move {
         //VALIDATION:
         boolean validation = false;
 
-        if (!to.empty() && to.peek().getRank() == (((FourSeasons) game).getSeasonRank() - 1))
+        if (!to.empty() && to.peek().getRank() == (((FourSeasons) game).getSeasonRank() - 1)) {
             return false; //stops a Season form growing too big
-
-        if (theCard == null) {
+        }
+        else if ((cardBeingDragged == null) && (!to.empty() && (from.rank() == (to.rank() + 1)))) {
             System.out.println("Card Being dragged was null");
-            if (!to.empty() && (from.rank() == (to.rank() + 1)))
-                validation = true;
-
-        } else if (to.empty()) {//building new season
-            if (theCard.getRank() == ((FourSeasons) game).getSeasonRank()) {
-                System.out.println("");
-                validation = true;
-            }
-        } else {
-            if (!to.empty() && (theCard.getRank() == (to.rank() + 1))
-                    || ((to.rank() == 13) && theCard.getRank() == 1))
-                validation = true;
+            validation = true;
+        }
+        else if (to.empty()
+                && (cardBeingDragged.getRank() == ((FourSeasons) game).getSeasonRank())) {//building new season
+            validation = true;
+        }
+        else if (!to.empty() && (cardBeingDragged.getRank() == (to.rank() + 1))
+                || ((to.rank() == Card.KING) && (cardBeingDragged.getRank() == Card.ACE))) {
+            validation = true;
         }
         return validation;
     }

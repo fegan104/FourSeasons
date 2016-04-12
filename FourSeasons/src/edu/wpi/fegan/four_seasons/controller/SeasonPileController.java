@@ -1,10 +1,7 @@
 package edu.wpi.fegan.four_seasons.controller;
 
 import edu.wpi.fegan.four_seasons.FourSeasons;
-import edu.wpi.fegan.four_seasons.moves.TableauToSeasonMove;
-import edu.wpi.fegan.four_seasons.moves.WasteToSeasonMove;
-import edu.wpi.fegan.four_seasons.view.TableauPileView;
-import edu.wpi.fegan.four_seasons.view.WastePileView;
+import edu.wpi.fegan.four_seasons.moves.ToSeasonMove;
 import ks.common.model.Card;
 import ks.common.model.Move;
 import ks.common.model.Pile;
@@ -129,32 +126,43 @@ public class SeasonPileController extends java.awt.event.MouseAdapter{
             return;
         }
 
-        //Which move should we use?TODO reduce move types so this logic isn't necessary
-        if (fromWidget instanceof TableauPileView) {
-            //Tableau to tableau move
-            Pile tableauPile = (Pile) fromWidget.getModelElement();
-            Move m = new TableauToSeasonMove(tableauPile, theCard, toPile);
-            if (m.doMove(theGame)) {
-                // Successful move! add move to our set of moves
-                theGame.pushMove(m);
-            } else {
-                // Invalid move. Restore to original waste pile. NO MOVE MADE
-                tableauPile.add(theCard);
-            }
-        } else if (fromWidget instanceof WastePileView) {
-            //Card from waste pile released on Tableau
-            Pile wastePile = (Pile) fromWidget.getModelElement();
-            Move m = new WasteToSeasonMove(wastePile, theCard, toPile);
-            if (m.doMove(theGame)) {
-                // Successful move! add move to our set of moves
-                theGame.pushMove(m);
-            } else {
-                // Invalid move. Restore to original waste pile. NO MOVE MADE
-                wastePile.add(theCard);
-            }
+        //Card from waste pile or Tableau released on Season
+        Pile wastePile = (Pile) fromWidget.getModelElement();
+        Move m = new ToSeasonMove(wastePile, theCard, toPile);
+        if (m.doMove(theGame)) {
+            // Successful move! add move to our set of moves
+            theGame.pushMove(m);
         } else {
-            System.err.println("Released an impossible view onto Tableau");
+            // Invalid move. Restore to original waste pile. NO MOVE MADE
+            wastePile.add(theCard);
         }
+
+        //Which move should we use?TODO reduce move types so this logic isn't necessary
+//        if (fromWidget instanceof TableauPileView) {
+//            //Tableau to tableau move
+//            Pile tableauPile = (Pile) fromWidget.getModelElement();
+//            Move m = new TableauToSeasonMove(tableauPile, theCard, toPile);
+//            if (m.doMove(theGame)) {
+//                // Successful move! add move to our set of moves
+//                theGame.pushMove(m);
+//            } else {
+//                // Invalid move. Restore to original waste pile. NO MOVE MADE
+//                tableauPile.add(theCard);
+//            }
+//        } else if (fromWidget instanceof WastePileView) {
+//            //Card from waste pile released on Tableau
+//            Pile wastePile = (Pile) fromWidget.getModelElement();
+//            Move m = new WasteToSeasonMove(wastePile, theCard, toPile);
+//            if (m.doMove(theGame)) {
+//                // Successful move! add move to our set of moves
+//                theGame.pushMove(m);
+//            } else {
+//                // Invalid move. Restore to original waste pile. NO MOVE MADE
+//                wastePile.add(theCard);
+//            }
+//        } else {
+//            System.err.println("Released an impossible view onto Tableau");
+//        }
 
         // release the dragging object, (container will reset dragSource)
         c.releaseDraggingObject();
