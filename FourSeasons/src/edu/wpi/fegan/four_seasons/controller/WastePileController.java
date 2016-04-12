@@ -1,9 +1,7 @@
 package edu.wpi.fegan.four_seasons.controller;
 
 import edu.wpi.fegan.four_seasons.FourSeasons;
-import edu.wpi.fegan.four_seasons.moves.WasteToSeasonMove;
 import ks.common.controller.SolitaireReleasedAdapter;
-import ks.common.model.Move;
 import ks.common.model.Pile;
 import ks.common.view.CardView;
 import ks.common.view.Container;
@@ -17,7 +15,7 @@ import java.awt.event.MouseEvent;
  */
 public class WastePileController extends SolitaireReleasedAdapter {
 
-    /** The Klondike Game. */
+    /** The FourSeason Game. */
     protected FourSeasons theGame;
 
     /** The specific WastePileView being controlled. */
@@ -34,7 +32,7 @@ public class WastePileController extends SolitaireReleasedAdapter {
     }
 
     /**
-     * Try to play the faceup card directly to the foundation.
+     * Try to play the faceup card directly to the foundation. TODO implement
      * @param me java.awt.event.MouseEvent
      */
 //    public void mouseClicked(MouseEvent me) {

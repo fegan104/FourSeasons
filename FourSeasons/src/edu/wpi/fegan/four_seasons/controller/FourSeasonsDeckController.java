@@ -27,7 +27,7 @@ public class FourSeasonsDeckController extends SolitaireReleasedAdapter {
     protected Deck deck;
 
     /**
-     * KlondikeDeckController constructor comment.
+     * FourSeasonsDeckController constructor comment.
      */
     public FourSeasonsDeckController(FourSeasons theGame, Deck d, Pile wastePile) {
         super(theGame);

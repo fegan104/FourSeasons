@@ -1,12 +1,16 @@
 package edu.wpi.fegan.four_seasons.controller;
 
 import edu.wpi.fegan.four_seasons.FourSeasons;
-import edu.wpi.fegan.four_seasons.moves.TableauToTableauMove;
-import edu.wpi.fegan.four_seasons.moves.WasteToTableauMove;
+import edu.wpi.fegan.four_seasons.moves.ToTableauMove;
 import edu.wpi.fegan.four_seasons.view.TableauPileView;
 import edu.wpi.fegan.four_seasons.view.WastePileView;
-import ks.common.model.*;
-import ks.common.view.*;
+import ks.common.model.Card;
+import ks.common.model.Move;
+import ks.common.model.Pile;
+import ks.common.view.CardView;
+import ks.common.view.Container;
+import ks.common.view.PileView;
+import ks.common.view.Widget;
 
 import java.awt.event.MouseEvent;
 
@@ -128,7 +132,7 @@ public class TableauPileController extends java.awt.event.MouseAdapter {
         if (fromWidget instanceof TableauPileView) {
             //Tableau to tableau move
             Pile tableauPile = (Pile) fromWidget.getModelElement();
-            Move m = new TableauToTableauMove(tableauPile, theCard, toPile);
+            Move m = new ToTableauMove(tableauPile, theCard, toPile);
             if (m.doMove(theGame)) {
                 // Successful move! add move to our set of moves
                 theGame.pushMove(m);
@@ -139,7 +143,7 @@ public class TableauPileController extends java.awt.event.MouseAdapter {
         } else if (fromWidget instanceof WastePileView) {
             //Card from waste pile released on Tableau
             Pile wastePile = (Pile) fromWidget.getModelElement();
-            Move m = new WasteToTableauMove(wastePile, theCard, toPile);
+            Move m = new ToTableauMove(wastePile, theCard, toPile);
             if (m.doMove(theGame)) {
                 // Successful move! add move to our set of moves
                 theGame.pushMove(m);

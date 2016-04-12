@@ -7,34 +7,40 @@ import ks.common.model.Move;
 import ks.common.model.Pile;
 
 /**
- * Created by frankegan on 4/1/16.
+ * Created by frankegan on 4/12/16.
  */
-public class WasteToTableauMove extends Move {
-    /** The waste pile. */
-    protected Pile waste;
+public class ToTableauMove extends Move {
+    /**
+     * The waste pile.
+     */
+    protected Pile from;
 
-    /** The Destination column. */
+    /**
+     * The Destination column.
+     */
     protected Pile to;
 
-    /** The card being dragged (if the move has already been made). */
+    /**
+     * The card being dragged (if the move has already been made).
+     */
     protected Card cardBeingDragged;
 
-    public WasteToTableauMove(Pile waste, Card cardBeingDragged, Pile to) {
-        this.waste = waste;
+    public ToTableauMove(Pile from, Card cardBeingDragged, Pile to) {
+        this.from = from;
         this.to = to;
         this.cardBeingDragged = cardBeingDragged;
     }
 
     @Override
-    public boolean doMove(Solitaire game) {
+    public boolean doMove(Solitaire theGame) {
         // VALIDATE:
-        if (!valid(game))
+        if (!valid(theGame))
             return false;
 
         // EXECUTE:
         // move card from waste to to Pile.
         if (cardBeingDragged == null)
-            to.add(waste.get());
+            to.add(from.get());
         else
             to.add(cardBeingDragged);
 
@@ -48,12 +54,12 @@ public class WasteToTableauMove extends Move {
 
         // EXECUTE:
         // remove card and move to from pile.
-        waste.add (to.get());
+        from.add(to.get());
         return true;
     }
 
     @Override
-    public boolean valid(Solitaire game) {
+    public boolean valid(Solitaire theGame) {
         //VALIDATION:
         boolean validation = false;
 
@@ -64,17 +70,16 @@ public class WasteToTableauMove extends Move {
         if (cardBeingDragged == null) {
             //moveColumnBetweenPiles(Waste from,BuildablePile to) : not to.empty() and waste.rank() == to.rank() - 1 and to.peek().faceUp()
             if (!to.empty()
-                    && (waste.rank() == (to.rank() - 1)))
+                    && (from.rank() == (to.rank() - 1)))
                 validation = true;
 
         } else if (to.empty()) {//building new season TODO no idea if this is right
-            if (cardBeingDragged.getRank() == ((FourSeasons) game).getSeasonRank())
+            if (cardBeingDragged.getRank() == ((FourSeasons) theGame).getSeasonRank())
                 validation = true;
         } else {
             //moveColumnBetweenPiles(Waste from,BuildablePile to) : not to.empty() and cardBeingDragged.rank() == to.rank() - 1 and to.peek().faceUp()
-            if (!to.empty()
-                    && (cardBeingDragged.getRank() == (to.rank() - 1))
-                    || ((to.rank() == 13) && cardBeingDragged.getRank() == 1))
+            if (!to.empty() && (cardBeingDragged.getRank() == (to.rank() - 1))
+                    || ((to.rank() == Card.ACE) && cardBeingDragged.getRank() == Card.KING))//round the corner
                 validation = true;
         }
         return validation;
